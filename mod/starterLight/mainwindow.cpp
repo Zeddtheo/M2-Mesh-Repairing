@@ -194,8 +194,8 @@ std::vector<std::vector<FaceHandle>> MainWindow::findNoise(MyMesh* mesh) {
     return noiseComponents;
 }
 
+//To detect close points, just for test
 void MainWindow::markCloseVertices(MyMesh* _mesh) {
-
     for (MyMesh::VertexIter v_it1 = _mesh->vertices_begin(); v_it1 != _mesh->vertices_end(); ++v_it1) {
         for (MyMesh::VertexIter v_it2 = v_it1 + 1; v_it2 != _mesh->vertices_end(); ++v_it2) {
             MyMesh::Point p1 = _mesh->point(*v_it1);
@@ -322,17 +322,17 @@ void MainWindow::fixCracks(){
 }
 
 void MainWindow::fixNoises(MyMesh* mesh){
-    auto noises = findNoise(mesh); // 获取噪声组件列表
+    auto noises = findNoise(mesh);
 
     for (const auto& noise : noises) {
         for (const auto& fh : noise) {
             if (!mesh->status(fh).deleted()) {
-                mesh->delete_face(fh, true); // 删除噪声组件中的面
+                mesh->delete_face(fh, true);
             }
         }
     }
 
-    mesh->garbage_collection(); // 清理网格，移除已删除的元素
+    mesh->garbage_collection();
 }
 
 void MainWindow::fixFloaters(MyMesh* mesh) {
