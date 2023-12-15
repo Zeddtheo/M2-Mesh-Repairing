@@ -2252,22 +2252,15 @@ mainwindow.o: ../starterLight/mainwindow.cpp ../starterLight/mainwindow.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qinputmethod.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication_platform.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QHBoxLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qboxlayout.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QGridLayout \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qgridlayout.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayout.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayoutitem.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qgridlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QMenuBar \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qmenubar.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qmenu.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qboxlayout.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QHBoxLayout \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QPushButton \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qpushbutton.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qabstractbutton.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QSpacerItem \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QStatusBar \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qstatusbar.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QToolBar \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtoolbar.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QVBoxLayout \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QWidget \
 		../starterLight/meshviewerwidget.h \

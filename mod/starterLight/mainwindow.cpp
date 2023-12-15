@@ -5,7 +5,7 @@
 #include <stack>
 #include <unordered_set>
 #include <vector>
-//----------------------Basic Functions-------------------------//
+//---------------------------------Basic Functions--------------------------------------//
 std::multimap<size_t, std::vector<FaceHandle>> MainWindow::findAllConnectedComponents(MyMesh& mesh) {
     std::multimap<size_t, std::vector<FaceHandle>> components;
     std::unordered_set<FaceHandle> visited;
@@ -73,6 +73,33 @@ void MainWindow::colorAllComponents(std::multimap<size_t, std::vector<FaceHandle
     }
 }
 
+void MainWindow::colorBorderLoops(std::vector<std::vector<EdgeHandle>> borderLoops, MyMesh* mesh, const MyMesh::Color& color, float pointSize) {
+    if (!mesh->has_edge_colors()) {
+        mesh->request_edge_colors();
+    }
+
+    if (!mesh->has_vertex_colors()) {
+        mesh->request_vertex_colors();
+    }
+
+    for (const auto& loop : borderLoops) {
+        for (const auto& eh : loop) {
+
+            mesh->set_color(eh, color);
+
+            HalfedgeHandle heh = mesh->halfedge_handle(eh, 0);
+            VertexHandle vh1 = mesh->to_vertex_handle(heh);
+            VertexHandle vh2 = mesh->from_vertex_handle(heh);
+
+            mesh->set_color(vh1, color);
+            mesh->set_color(vh2, color);
+
+            // 增加顶点的粗细
+            mesh->data(vh1).thickness = pointSize;
+            mesh->data(vh2).thickness = pointSize;
+        }
+    }
+}
 void MainWindow::colorComponentEdges(std::vector<FaceHandle> component, MyMesh* mesh, MyMesh::Color color) {
     if (!mesh->has_edge_colors()) {
         mesh->request_edge_colors();
@@ -98,6 +125,26 @@ void MainWindow::colorAllComponentsEdges(std::multimap<size_t, std::vector<FaceH
     }
 }
 //-------------------------------------Logics------------------------------------------//
+//Define how many main components we need
+std::unordered_set<VertexHandle> MainWindow::findMainComponentsVertices(MyMesh* mesh, int nbMainComponents) {
+    auto components = findAllConnectedComponents(*mesh);
+
+
+    std::vector<std::pair<size_t, std::vector<FaceHandle>>> component_vector(components.begin(), components.end());
+    std::sort(component_vector.begin(), component_vector.end(),
+              [](const auto& a, const auto& b) { return a.first > b.first; });
+
+    std::unordered_set<VertexHandle> mainComponentsVertices;
+    for (int i = 0; i < nbMainComponents && i < component_vector.size(); ++i) {
+        for (const auto& face : component_vector[i].second) {
+            for (auto fv_it = mesh->fv_begin(face); fv_it.is_valid(); ++fv_it) {
+                mainComponentsVertices.insert(*fv_it);
+            }
+        }
+    }
+    return mainComponentsVertices;
+}
+//Detect noise components
 std::vector<std::vector<FaceHandle>> MainWindow::findNoise(MyMesh* mesh) {
     auto components = findAllConnectedComponents(*mesh);
 
@@ -105,14 +152,7 @@ std::vector<std::vector<FaceHandle>> MainWindow::findNoise(MyMesh* mesh) {
     std::sort(component_vector.begin(), component_vector.end(),
               [](const auto& a, const auto& b) { return a.first > b.first; });
     //Define 2 main components(for this rabbit)
-    std::unordered_set<VertexHandle> mainComponentsVertices;
-    for (int i = 0; i < 2 && i < component_vector.size(); ++i) {
-        for (const auto& face : component_vector[i].second) {
-            for (auto fv_it = mesh->fv_begin(face); fv_it.is_valid(); ++fv_it) {
-                mainComponentsVertices.insert(*fv_it);
-            }
-        }
-    }
+    auto mainComponentsVertices = findMainComponentsVertices(mesh, 2);
     //Find noise components who have common points or close points with main components
     std::vector<std::vector<FaceHandle>> noiseComponents;
     std::unordered_set<int> noiseComponentIndices;
@@ -193,8 +233,7 @@ std::vector<std::vector<FaceHandle>> MainWindow::findNoise(MyMesh* mesh) {
 
     return noiseComponents;
 }
-
-//To detect close points, just for test
+//Detect close points, just for test
 void MainWindow::markCloseVertices(MyMesh* _mesh) {
     for (MyMesh::VertexIter v_it1 = _mesh->vertices_begin(); v_it1 != _mesh->vertices_end(); ++v_it1) {
         for (MyMesh::VertexIter v_it2 = v_it1 + 1; v_it2 != _mesh->vertices_end(); ++v_it2) {
@@ -202,7 +241,6 @@ void MainWindow::markCloseVertices(MyMesh* _mesh) {
             MyMesh::Point p2 = _mesh->point(*v_it2);
 
             if (isClose(p1,p2)) {
-                //qDebug("exist");
                 _mesh->set_color(*v_it1, MyMesh::Color(255, 0, 0));
                 _mesh->data(*v_it1).thickness = 10;
                 _mesh->set_color(*v_it2, MyMesh::Color(255, 0, 0));
@@ -220,7 +258,15 @@ bool MainWindow::isClose(MyMesh::Point p1, MyMesh::Point p2){
 
 std::vector<std::vector<FaceHandle>> MainWindow::findFloaters(MyMesh* mesh) {
     auto components = findAllConnectedComponents(*mesh);
-    auto noiseComponents = findNoise(mesh);  // we delete noises here
+    auto noiseComponents = findNoise(mesh);
+    auto mainComponentsVertices = findMainComponentsVertices(mesh, 2);
+
+    std::unordered_set<FaceHandle> main_component_faces;
+    for (const auto& vertex : mainComponentsVertices) {
+        for (auto vf_it = mesh->vf_begin(vertex); vf_it.is_valid(); ++vf_it) {
+            main_component_faces.insert(*vf_it);
+        }
+    }
 
     std::unordered_set<FaceHandle> noiseFaces;
     for (const auto& noiseComponent : noiseComponents) {
@@ -229,28 +275,9 @@ std::vector<std::vector<FaceHandle>> MainWindow::findFloaters(MyMesh* mesh) {
         }
     }
 
-    std::vector<std::pair<size_t, std::vector<FaceHandle>>> largest_components;
-    for (const auto& component_pair : components) {
-        largest_components.push_back(component_pair);
-    }
-
-    std::sort(largest_components.begin(), largest_components.end(),
-              [](const std::pair<size_t, std::vector<FaceHandle>>& a,
-                 const std::pair<size_t, std::vector<FaceHandle>>& b) {
-                  return a.first > b.first;
-              });
-
-    std::unordered_set<FaceHandle> main_component_faces;
-    for (int i = 0; i < 2 && i < largest_components.size(); ++i) {
-        for (const auto& face : largest_components[i].second) {
-            main_component_faces.insert(face);
-        }
-    }
-
     std::vector<std::vector<FaceHandle>> floaters;
     for (const auto& component_pair : components) {
-        if (component_pair.second == largest_components[0].second ||
-            (largest_components.size() > 1 && component_pair.second == largest_components[1].second) ||
+        if (main_component_faces.find(component_pair.second.front()) != main_component_faces.end() ||
             std::any_of(component_pair.second.begin(), component_pair.second.end(),
                         [&](const FaceHandle& face){ return noiseFaces.count(face) > 0; })) {
             continue;
@@ -276,6 +303,100 @@ std::vector<std::vector<FaceHandle>> MainWindow::findFloaters(MyMesh* mesh) {
     return floaters;
 }
 
+std::vector<std::vector<EdgeHandle>> MainWindow::findBorders(MyMesh* mesh) {
+    auto mainComponentsVertices = findMainComponentsVertices(mesh, 2);
+
+    std::unordered_set<FaceHandle> mainComponentFaces;
+    for (const auto& vertex : mainComponentsVertices) {
+        for (auto vf_it = mesh->vf_begin(vertex); vf_it.is_valid(); ++vf_it) {
+            mainComponentFaces.insert(*vf_it);
+        }
+    }
+
+    std::unordered_set<EdgeHandle> checkedEdges;
+    std::vector<std::vector<EdgeHandle>> borderLoops;
+
+    for (const auto& face : mainComponentFaces) {
+        for (auto fe_it = mesh->fe_begin(face); fe_it.is_valid(); ++fe_it) {
+            EdgeHandle eh = *fe_it;
+            if (checkedEdges.find(eh) != checkedEdges.end()) {
+                continue;
+            }
+
+            HalfedgeHandle heh = mesh->halfedge_handle(eh, 0);
+            HalfedgeHandle opposite_heh = mesh->opposite_halfedge_handle(heh);
+
+            if (mesh->is_boundary(heh) || mesh->is_boundary(opposite_heh)) {
+                //qDebug("here!");
+                std::vector<EdgeHandle> loop;
+                EdgeHandle current_eh = eh;
+                do {
+                    loop.push_back(current_eh);
+                    checkedEdges.insert(current_eh);
+
+                    HalfedgeHandle current_heh = mesh->halfedge_handle(current_eh, 0);
+
+                    HalfedgeHandle next_heh = mesh->next_halfedge_handle(current_heh);
+                    while (!mesh->is_boundary(mesh->opposite_halfedge_handle(next_heh))) {
+                        next_heh = mesh->next_halfedge_handle(mesh->opposite_halfedge_handle(next_heh));
+                    }
+
+                    current_eh = mesh->edge_handle(next_heh);
+                } while (current_eh != eh && checkedEdges.find(current_eh) == checkedEdges.end());
+
+                if (!loop.empty()) {
+                    borderLoops.push_back(loop);
+                }
+            }
+        }
+    }
+
+    std::sort(borderLoops.begin(), borderLoops.end(),
+              [](const std::vector<EdgeHandle>& a, const std::vector<EdgeHandle>& b) {
+                  return a.size() > b.size();
+              });
+
+    return borderLoops;
+}
+
+std::vector<std::vector<EdgeHandle>> MainWindow::findCracks(MyMesh* mesh) {
+
+    auto borderLoops = findBorders(mesh);
+
+    std::vector<std::vector<EdgeHandle>> cracks;
+
+
+    for (int i = 0; i < 2 && i < borderLoops.size(); ++i) {
+        cracks.push_back(borderLoops[i]);
+    }
+
+    return cracks;
+}
+
+std::vector<std::vector<EdgeHandle>> MainWindow::findHoles(MyMesh* mesh) {
+    auto borderLoops = findBorders(mesh);
+    auto cracks = findCracks(mesh);
+
+    std::vector<std::vector<EdgeHandle>> holes;
+
+    for (const auto& loop : borderLoops) {
+        bool isCrack = false;
+        for (const auto& crack : cracks) {
+            if (loop.size() == crack.size() && std::equal(loop.begin(), loop.end(), crack.begin())) {
+                isCrack = true;
+                break;
+            }
+        }
+
+        if (!isCrack) {
+            holes.push_back(loop);
+        }
+    }
+
+    return holes;
+}
+
+
 //-------------------------------------Show------------------------------------------//
 void MainWindow::showComponents(MyMesh* _mesh){
     std::multimap<size_t, std::vector<FaceHandle>> componentFaces = findAllConnectedComponents(mesh);
@@ -283,19 +404,25 @@ void MainWindow::showComponents(MyMesh* _mesh){
     //colorAllComponentsEdges(componentFaces, &mesh);
 }
 
-void MainWindow::showGaps(MyMesh* _mesh){
-
+void MainWindow::showCracks(MyMesh* _mesh){
+    //auto borderLoops = findBorders(_mesh);
+    auto cracks = findCracks(_mesh);
+    MyMesh::Color crackColor(255,0,0);
+    colorBorderLoops(cracks, _mesh, crackColor,10);
 }
 
 void MainWindow::showHoles(MyMesh* _mesh) {
-    markCloseVertices(&mesh);
+    //markCloseVertices(&mesh);
+    auto holes = findHoles(_mesh);
+    MyMesh::Color holeColor(0,255,0);
+    colorBorderLoops(holes, _mesh, holeColor,10);
 }
 
 void MainWindow::showNoises(MyMesh* _mesh)
 {
     auto noises = findNoise(&mesh);
 
-    MyMesh::Color noiseColor(255, 255, 100);
+    MyMesh::Color noiseColor(255, 255, 128);
 
     for (auto& n : noises) {
         colorOneComponent(n, &mesh, noiseColor);
@@ -384,19 +511,16 @@ void MainWindow::on_pushButton_Holes_clicked(){
 }
 
 void MainWindow::on_pushButton_Cracks_clicked(){
-    //MyMesh mesh;
-    showGaps(&mesh);
+    showCracks(&mesh);
     displayMesh(&mesh);
 }
 
 void MainWindow::on_pushButton_Noises_clicked(){
-    //MyMesh mesh;
     showNoises(&mesh);
     displayMesh(&mesh);
 }
 
 void MainWindow::on_pushButton_Floaters_clicked(){
-    //MyMesh mesh;
     showFloaters(&mesh);
     displayMesh(&mesh);
 }

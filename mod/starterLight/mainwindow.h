@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
+#include <unordered_set>
 
 
 namespace Ui {
@@ -43,21 +44,25 @@ public:
     void displayMesh(MyMesh *_mesh, bool isTemperatureMap = false, float mapRange = -1);
     void resetAllColorsAndThickness(MyMesh* _mesh);
 
-    //std::vector<std::vector<FaceHandle>> findAllConnectedComponents(MyMesh& mesh);
     std::multimap<size_t, std::vector<FaceHandle>> findAllConnectedComponents(MyMesh& mesh);
     void colorOneComponent(std::vector<FaceHandle> component, MyMesh* mesh);
     void colorOneComponent(std::vector<FaceHandle> component, MyMesh* mesh, MyMesh::Color color);
     void colorAllComponents(std::multimap<size_t, std::vector<FaceHandle>>& components, MyMesh* mesh);
+    void colorBorderLoops(std::vector<std::vector<EdgeHandle>> borderLoops, MyMesh* mesh, const MyMesh::Color& color, float pointSize);
+    //unused
     void colorComponentEdges(std::vector<FaceHandle> component, MyMesh* mesh, MyMesh::Color color);
     void colorAllComponentsEdges(std::multimap<size_t, std::vector<FaceHandle>>& components, MyMesh* mesh);
     void showComponents(MyMesh* _mesh);
 
+    std::unordered_set<VertexHandle> findMainComponentsVertices(MyMesh* mesh, int nbMainComponents);
+
+    std::vector<std::vector<EdgeHandle>> findBorders(MyMesh* mesh);
+    std::vector<std::vector<EdgeHandle>> findCracks(MyMesh* mesh);
+    std::vector<std::vector<EdgeHandle>> findHoles(MyMesh* mesh);
     void showHoles(MyMesh* _mesh);
 
     std::vector<std::vector<VertexHandle>> findGaps(MyMesh* _mesh);
-    void showGaps(MyMesh* _mesh);
-
-    std::vector<EdgeHandle> findEdgesAdjacentToThreeFaces(MyMesh* mesh);
+    void showCracks(MyMesh* _mesh);
 
     std::vector<std::vector<FaceHandle>> findNoise(MyMesh* mesh);
     void showNoises(MyMesh* _mesh);
