@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -fPIC -D_REENTRANT $(DEFINES)
 CXXFLAGS      = -pipe -g -Wall -Wextra -fPIC -D_REENTRANT $(DEFINES)
-INCPATH       = -I../starterLight -I. -I../OpenMesh/inc -I/home/misc/Qt/6.6.1/gcc_64/include -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGL -I/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtGui -I/home/misc/Qt/6.6.1/gcc_64/include/QtCore -I. -I. -I/home/misc/Qt/6.6.1/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../starterLight -I. -I/usr/include/eigen3 -I../OpenMesh/inc -I/home/misc/Qt/6.6.1/gcc_64/include -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGL -I/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtGui -I/home/misc/Qt/6.6.1/gcc_64/include/QtCore -I. -I. -I/home/misc/Qt/6.6.1/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/misc/Qt/6.6.1/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -52,11 +52,13 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../starterLight/main.cpp \
+SOURCES       = ../starterLight/holefill.cpp \
+		../starterLight/main.cpp \
 		../starterLight/mainwindow.cpp \
 		../starterLight/meshviewerwidget.cpp moc_mainwindow.cpp \
 		moc_meshviewerwidget.cpp
-OBJECTS       = main.o \
+OBJECTS       = holefill.o \
+		main.o \
 		mainwindow.o \
 		meshviewerwidget.o \
 		moc_mainwindow.o \
@@ -373,8 +375,10 @@ DIST          = /home/misc/Qt/6.6.1/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/misc/Qt/6.6.1/gcc_64/mkspecs/features/exceptions.prf \
 		/home/misc/Qt/6.6.1/gcc_64/mkspecs/features/yacc.prf \
 		/home/misc/Qt/6.6.1/gcc_64/mkspecs/features/lex.prf \
-		../starterLight/starterLight.pro ../starterLight/mainwindow.h \
-		../starterLight/meshviewerwidget.h ../starterLight/main.cpp \
+		../starterLight/starterLight.pro ../starterLight/holefill.h \
+		../starterLight/mainwindow.h \
+		../starterLight/meshviewerwidget.h ../starterLight/holefill.cpp \
+		../starterLight/main.cpp \
 		../starterLight/mainwindow.cpp \
 		../starterLight/meshviewerwidget.cpp
 QMAKE_TARGET  = starterLight
@@ -1040,8 +1044,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/misc/Qt/6.6.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../starterLight/mainwindow.h ../starterLight/meshviewerwidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../starterLight/main.cpp ../starterLight/mainwindow.cpp ../starterLight/meshviewerwidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../starterLight/holefill.h ../starterLight/mainwindow.h ../starterLight/meshviewerwidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../starterLight/holefill.cpp ../starterLight/main.cpp ../starterLight/mainwindow.cpp ../starterLight/meshviewerwidget.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../starterLight/mainwindow.ui $(DISTDIR)/
 
 
@@ -1327,7 +1331,7 @@ moc_mainwindow.cpp: ../starterLight/mainwindow.h \
 		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.cc \
 		moc_predefs.h \
 		/home/misc/Qt/6.6.1/gcc_64/libexec/moc
-	/home/misc/Qt/6.6.1/gcc_64/libexec/moc $(DEFINES) --include /home/misc/Desktop/AMU/M2/MG/Kevin/mod/build-starterLight-Desktop_Qt_6_5_2_GCC_64bit-Debug/moc_predefs.h -I/home/misc/Qt/6.6.1/gcc_64/mkspecs/linux-g++ -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/starterLight -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/OpenMesh/inc -I/home/misc/Qt/6.6.1/gcc_64/include -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGL -I/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtGui -I/home/misc/Qt/6.6.1/gcc_64/include/QtCore -I. -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../starterLight/mainwindow.h -o moc_mainwindow.cpp
+	/home/misc/Qt/6.6.1/gcc_64/libexec/moc $(DEFINES) --include /home/misc/Desktop/AMU/M2/MG/Kevin/mod/build-starterLight-Desktop_Qt_6_5_2_GCC_64bit-Debug/moc_predefs.h -I/home/misc/Qt/6.6.1/gcc_64/mkspecs/linux-g++ -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/starterLight -I/usr/include/eigen3 -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/OpenMesh/inc -I/home/misc/Qt/6.6.1/gcc_64/include -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGL -I/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtGui -I/home/misc/Qt/6.6.1/gcc_64/include/QtCore -I. -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../starterLight/mainwindow.h -o moc_mainwindow.cpp
 
 moc_meshviewerwidget.cpp: ../starterLight/meshviewerwidget.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QDebug \
@@ -1509,7 +1513,7 @@ moc_meshviewerwidget.cpp: ../starterLight/meshviewerwidget.h \
 		../OpenMesh/inc/OpenMesh/Core/Geometry/VectorT_inc.hh \
 		moc_predefs.h \
 		/home/misc/Qt/6.6.1/gcc_64/libexec/moc
-	/home/misc/Qt/6.6.1/gcc_64/libexec/moc $(DEFINES) --include /home/misc/Desktop/AMU/M2/MG/Kevin/mod/build-starterLight-Desktop_Qt_6_5_2_GCC_64bit-Debug/moc_predefs.h -I/home/misc/Qt/6.6.1/gcc_64/mkspecs/linux-g++ -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/starterLight -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/OpenMesh/inc -I/home/misc/Qt/6.6.1/gcc_64/include -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGL -I/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtGui -I/home/misc/Qt/6.6.1/gcc_64/include/QtCore -I. -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../starterLight/meshviewerwidget.h -o moc_meshviewerwidget.cpp
+	/home/misc/Qt/6.6.1/gcc_64/libexec/moc $(DEFINES) --include /home/misc/Desktop/AMU/M2/MG/Kevin/mod/build-starterLight-Desktop_Qt_6_5_2_GCC_64bit-Debug/moc_predefs.h -I/home/misc/Qt/6.6.1/gcc_64/mkspecs/linux-g++ -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/starterLight -I/usr/include/eigen3 -I/home/misc/Desktop/AMU/M2/MG/Kevin/mod/OpenMesh/inc -I/home/misc/Qt/6.6.1/gcc_64/include -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGL -I/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets -I/home/misc/Qt/6.6.1/gcc_64/include/QtGui -I/home/misc/Qt/6.6.1/gcc_64/include/QtCore -I. -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../starterLight/meshviewerwidget.h -o moc_meshviewerwidget.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1709,6 +1713,9 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
+
+holefill.o: ../starterLight/holefill.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o holefill.o ../starterLight/holefill.cpp
 
 main.o: ../starterLight/main.cpp ../starterLight/mainwindow.h \
 		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QFileDialog \
@@ -2229,51 +2236,7 @@ mainwindow.o: ../starterLight/mainwindow.cpp ../starterLight/mainwindow.h \
 		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyMeshT.cc \
 		../OpenMesh/inc/OpenMesh/Core/Geometry/LoopSchemeMaskT.hh \
 		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.cc \
-		ui_mainwindow.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QVariant \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QApplication \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qapplication.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreapplication.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qeventloop.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreapplication_platform.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfuture.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfutureinterface.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmutex.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdeadlinetimer.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qelapsedtimer.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtsan_impl.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qresultstore.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfuture_impl.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qthreadpool.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qthread.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrunnable.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qexception.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpromise.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qinputmethod.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication_platform.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QGridLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qgridlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayoutitem.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qboxlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QHBoxLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QPushButton \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qpushbutton.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qabstractbutton.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QVBoxLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QWidget \
-		../starterLight/meshviewerwidget.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QDebug \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/QOpenGLWidget \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qopenglwidget.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qtopenglwidgetsglobal.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qtopenglwidgetsexports.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QSurfaceFormat \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qsurfaceformat.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qopengl.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qopenglext.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QMouseEvent
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../starterLight/mainwindow.cpp
 
 meshviewerwidget.o: ../starterLight/meshviewerwidget.cpp ../starterLight/meshviewerwidget.h \

@@ -29,6 +29,7 @@ unix:!macx {
     LIBS += -lGL
     LIBS += -L$$PWD/../OpenMesh/liblinux/ -lOpenMeshCore
 
+    INCLUDEPATH += /usr/include/eigen3
     INCLUDEPATH += $$PWD/../OpenMesh/inc/
     DEPENDPATH += $$PWD/../OpenMesh/inc/
     DEPENDPATH += $$PWD/../OpenMesh/liblinux/
@@ -42,11 +43,13 @@ macx: {
 }
 
 SOURCES += \
+    holefill.cpp \
         main.cpp \
         mainwindow.cpp \
     meshviewerwidget.cpp
 
 HEADERS += \
+    holefill.h \
         mainwindow.h \
     meshviewerwidget.h
 

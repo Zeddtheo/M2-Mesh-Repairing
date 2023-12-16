@@ -7,7 +7,6 @@
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
 #include <unordered_set>
 
-
 namespace Ui {
 class MainWindow;
 }
@@ -37,14 +36,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     void displayMesh(MyMesh *_mesh, bool isTemperatureMap = false, float mapRange = -1);
     void resetAllColorsAndThickness(MyMesh* _mesh);
 
-    std::multimap<size_t, std::vector<FaceHandle>> findAllConnectedComponents(MyMesh& mesh);
+    static std::multimap<size_t, std::vector<FaceHandle>> findAllConnectedComponents(MyMesh& mesh);
     void colorOneComponent(std::vector<FaceHandle> component, MyMesh* mesh);
     void colorOneComponent(std::vector<FaceHandle> component, MyMesh* mesh, MyMesh::Color color);
     void colorAllComponents(std::multimap<size_t, std::vector<FaceHandle>>& components, MyMesh* mesh);
@@ -54,11 +52,12 @@ public:
     void colorAllComponentsEdges(std::multimap<size_t, std::vector<FaceHandle>>& components, MyMesh* mesh);
     void showComponents(MyMesh* _mesh);
 
-    std::unordered_set<VertexHandle> findMainComponentsVertices(MyMesh* mesh, int nbMainComponents);
+    static std::unordered_set<VertexHandle> findMainComponentsVertices(MyMesh* mesh, int nbMainComponents);
+    static std::vector<std::vector<EdgeHandle>> findBorders(MyMesh* mesh);
+    static std::vector<std::vector<EdgeHandle>> findCracks(MyMesh* mesh);
+    static std::vector<std::vector<EdgeHandle>> findHoles(MyMesh* mesh);
 
-    std::vector<std::vector<EdgeHandle>> findBorders(MyMesh* mesh);
-    std::vector<std::vector<EdgeHandle>> findCracks(MyMesh* mesh);
-    std::vector<std::vector<EdgeHandle>> findHoles(MyMesh* mesh);
+    std::vector<VertexHandle> boundaryLoop(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh);
     void showHoles(MyMesh* _mesh);
 
     std::vector<std::vector<VertexHandle>> findGaps(MyMesh* _mesh);
@@ -70,7 +69,7 @@ public:
     std::vector<std::vector<FaceHandle>> findFloaters(MyMesh* _mesh);
     void showFloaters(MyMesh* _mesh);
 
-    void fixHoles();
+    void fixHoles(MyMesh* mesh);
     void fixCracks();
     void fixNoises(MyMesh* mesh);
     void fixFloaters(MyMesh* mesh);

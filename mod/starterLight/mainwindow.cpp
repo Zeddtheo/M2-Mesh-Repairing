@@ -1,6 +1,6 @@
 #include "mainwindow.h"
+#include "holefill.h"
 #include "ui_mainwindow.h"
-#include <iostream>
 #include <random>
 #include <stack>
 #include <unordered_set>
@@ -94,12 +94,12 @@ void MainWindow::colorBorderLoops(std::vector<std::vector<EdgeHandle>> borderLoo
             mesh->set_color(vh1, color);
             mesh->set_color(vh2, color);
 
-            // 增加顶点的粗细
             mesh->data(vh1).thickness = pointSize;
             mesh->data(vh2).thickness = pointSize;
         }
     }
 }
+
 void MainWindow::colorComponentEdges(std::vector<FaceHandle> component, MyMesh* mesh, MyMesh::Color color) {
     if (!mesh->has_edge_colors()) {
         mesh->request_edge_colors();
@@ -396,7 +396,28 @@ std::vector<std::vector<EdgeHandle>> MainWindow::findHoles(MyMesh* mesh) {
     return holes;
 }
 
+std::vector<VertexHandle> MainWindow::boundaryLoop(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh) {
+    std::vector<VertexHandle> loopVertices;
+    if (edgeHandles.empty() || !mesh) return loopVertices;
 
+    for (const auto& eh : edgeHandles) {
+        auto heh = mesh->halfedge_handle(eh, 0);
+
+        VertexHandle from_vh = mesh->from_vertex_handle(heh);
+        VertexHandle to_vh = mesh->to_vertex_handle(heh);
+
+        if (loopVertices.empty() || loopVertices.back() != from_vh) {
+            loopVertices.push_back(from_vh);
+        }
+        loopVertices.push_back(to_vh);
+    }
+
+    if (!loopVertices.empty() && loopVertices.front() != loopVertices.back()) {
+        loopVertices.push_back(loopVertices.front());
+    }
+
+    return loopVertices;
+}
 //-------------------------------------Show------------------------------------------//
 void MainWindow::showComponents(MyMesh* _mesh){
     std::multimap<size_t, std::vector<FaceHandle>> componentFaces = findAllConnectedComponents(mesh);
@@ -420,7 +441,7 @@ void MainWindow::showHoles(MyMesh* _mesh) {
 
 void MainWindow::showNoises(MyMesh* _mesh)
 {
-    auto noises = findNoise(&mesh);
+    auto noises = findNoise(_mesh);
 
     MyMesh::Color noiseColor(255, 255, 128);
 
@@ -439,9 +460,20 @@ void MainWindow::showFloaters(MyMesh* mesh) {
     }
 }
 
-//---------------------------Fix---------------------------//
-void MainWindow::fixHoles(){
+//--------------------------------------Fix-------------------------------------------//
+void MainWindow::fixHoles(MyMesh* mesh) {
+    if (!mesh) return;
 
+    std::vector<std::vector<EdgeHandle>> holes = findHoles(mesh);
+    qDebug("here5");
+    for (const std::vector<EdgeHandle>& hole : holes) {
+        std::vector<VertexHandle> boundary_vertices = boundaryLoop(hole, mesh);
+        std::vector<FaceHandle> new_faces = holeFill::fillHole(mesh, boundary_vertices);
+        for (const FaceHandle& new_face : new_faces) {
+            mesh->set_color(new_face, MyMesh::Color(0, 0, 0));
+        }
+    qDebug("here6");
+    }
 }
 
 void MainWindow::fixCracks(){
@@ -526,7 +558,8 @@ void MainWindow::on_pushButton_Floaters_clicked(){
 }
 
 void MainWindow::on_pushButton_FixHoles_clicked(){
-
+    fixHoles(&mesh);
+    displayMesh(&mesh);
 }
 
 void MainWindow::on_pushButton_FixCracks_clicked(){
