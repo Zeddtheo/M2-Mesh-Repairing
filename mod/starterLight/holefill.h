@@ -5,7 +5,6 @@
 class holeFill
 {
 public:
-
     holeFill();
     static double triangleArea(MyMesh* _mesh, const VertexHandle& v1, const VertexHandle& v2, const VertexHandle& v3);
     //OpenMesh::Vec3f triangleNormal(MyMesh* _mesh, const Triangle& t);

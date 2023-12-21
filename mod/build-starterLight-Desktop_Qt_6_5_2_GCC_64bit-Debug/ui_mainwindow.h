@@ -33,6 +33,7 @@ public:
     QPushButton *pushButton_chargement;
     QPushButton *pushButton_Components;
     QPushButton *pushButton_FixAll;
+    QPushButton *pushButton_Remesh;
     QPushButton *pushButton_Reset;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
@@ -93,6 +94,11 @@ public:
         pushButton_FixAll->setObjectName("pushButton_FixAll");
 
         verticalLayout_2->addWidget(pushButton_FixAll);
+
+        pushButton_Remesh = new QPushButton(widget_2);
+        pushButton_Remesh->setObjectName("pushButton_Remesh");
+
+        verticalLayout_2->addWidget(pushButton_Remesh);
 
         pushButton_Reset = new QPushButton(widget_2);
         pushButton_Reset->setObjectName("pushButton_Reset");
@@ -196,6 +202,7 @@ public:
         pushButton_chargement->setText(QCoreApplication::translate("MainWindow", "Charger OBJ", nullptr));
         pushButton_Components->setText(QCoreApplication::translate("MainWindow", "Show Components", nullptr));
         pushButton_FixAll->setText(QCoreApplication::translate("MainWindow", "Fix All", nullptr));
+        pushButton_Remesh->setText(QCoreApplication::translate("MainWindow", "Remeshing", nullptr));
         pushButton_Reset->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
         pushButton_Holes->setText(QCoreApplication::translate("MainWindow", "Holes", nullptr));
         pushButton_FixHoles->setText(QCoreApplication::translate("MainWindow", "Fix Holes", nullptr));

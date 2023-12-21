@@ -55,12 +55,14 @@ OBJECTS_DIR   = ./
 SOURCES       = ../starterLight/holefill.cpp \
 		../starterLight/main.cpp \
 		../starterLight/mainwindow.cpp \
-		../starterLight/meshviewerwidget.cpp moc_mainwindow.cpp \
+		../starterLight/meshviewerwidget.cpp \
+		../starterLight/remeshing.cpp moc_mainwindow.cpp \
 		moc_meshviewerwidget.cpp
 OBJECTS       = holefill.o \
 		main.o \
 		mainwindow.o \
 		meshviewerwidget.o \
+		remeshing.o \
 		moc_mainwindow.o \
 		moc_meshviewerwidget.o
 DIST          = /home/misc/Qt/6.6.1/gcc_64/mkspecs/features/spec_pre.prf \
@@ -377,10 +379,12 @@ DIST          = /home/misc/Qt/6.6.1/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/misc/Qt/6.6.1/gcc_64/mkspecs/features/lex.prf \
 		../starterLight/starterLight.pro ../starterLight/holefill.h \
 		../starterLight/mainwindow.h \
-		../starterLight/meshviewerwidget.h ../starterLight/holefill.cpp \
+		../starterLight/meshviewerwidget.h \
+		../starterLight/remeshing.h ../starterLight/holefill.cpp \
 		../starterLight/main.cpp \
 		../starterLight/mainwindow.cpp \
-		../starterLight/meshviewerwidget.cpp
+		../starterLight/meshviewerwidget.cpp \
+		../starterLight/remeshing.cpp
 QMAKE_TARGET  = starterLight
 DESTDIR       = 
 TARGET        = starterLight
@@ -1044,8 +1048,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/misc/Qt/6.6.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../starterLight/holefill.h ../starterLight/mainwindow.h ../starterLight/meshviewerwidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../starterLight/holefill.cpp ../starterLight/main.cpp ../starterLight/mainwindow.cpp ../starterLight/meshviewerwidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../starterLight/holefill.h ../starterLight/mainwindow.h ../starterLight/meshviewerwidget.h ../starterLight/remeshing.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../starterLight/holefill.cpp ../starterLight/main.cpp ../starterLight/mainwindow.cpp ../starterLight/meshviewerwidget.cpp ../starterLight/remeshing.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../starterLight/mainwindow.ui $(DISTDIR)/
 
 
@@ -1714,7 +1718,255 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-holefill.o: ../starterLight/holefill.cpp 
+holefill.o: ../starterLight/holefill.cpp ../starterLight/holefill.h \
+		../starterLight/mainwindow.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QFileDialog \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qfiledialog.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtversionchecks.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtconfiginclude.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qconfig.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtcore-config.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtconfigmacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtcoreexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtdeprecationmarkers.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtpreprocessorsupport.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qassert.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtnoop.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtypes.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtversion.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtclasshelpermacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsysinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlogging.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qflags.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcompare_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qatomic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qconstructormacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdarwinhelpers.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qexceptionhandling.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qforeach.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qttypetraits.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfunctionpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmalloc.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qminmax.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qnumeric.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qoverload.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qswap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtenvironmentvariables.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtresource.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qttranslation.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qversiontagging.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtgui-config.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtguiexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtwidgetsexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdir.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstring.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qchar.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearray.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrefcount.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qnamespace.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtmetamacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qarraydata.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpair.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qarraydatapointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qarraydataops.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontainertools_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qxptype_traits.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q20functional.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q20memory.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearrayalgorithms.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearrayview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringfwd.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q20type_traits.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringliteral.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlatin1stringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qanystringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qutf8stringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringtokenizer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfile.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfiledevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiodevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiodevicebase.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobject.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfunctionaltools_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlist.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiterator.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringlist.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qalgorithms.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreevent.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmetatype.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcompare.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdatastream.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfloat16.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmath.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiterable.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmetacontainer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontainerinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtaggedpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qscopeguard.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobject_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbindingstorage.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfileinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qshareddata.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdatetime.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcalendar.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlocale.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qvariant.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdebug.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtextstream.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringconverter_base.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qshareddata_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qset.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qhash.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q23utility.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtimezone.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qurl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qdialog.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qwidget.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmargins.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qaction.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qkeysequence.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qicon.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsize.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpixmap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrect.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpoint.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qcolor.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qrgb.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qrgba64.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qimage.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpixelformat.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtransform.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpolygon.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qregion.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qline.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpalette.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qbrush.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qfont.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qfontinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qcursor.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qbitmap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qevent.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qeventpoint.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qvector2d.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qvectornd.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpointingdevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qinputdevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qscreen.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QList \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QObject \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QRect \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QSize \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QSizeF \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QTransform \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qnativeinterface.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QMainWindow \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qmainwindow.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtabwidget.h \
+		../OpenMesh/inc/OpenMesh/Core/IO/MeshIO.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/config.h \
+		../OpenMesh/inc/OpenMesh/Core/System/compiler.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/OpenMeshDLLMacros.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_store.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_types.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_rbo.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/omstream.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/mostream.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/GenProg.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_spec.hh \
+		../OpenMesh/inc/OpenMesh/Tools/Utils/NumLimitsT.hh \
+		../OpenMesh/inc/OpenMesh/Tools/Utils/Config.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/VectorT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/Vector11T.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/VectorT_inc.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Status.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_vector_of_fundamentals.inl \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_vector_of_string.inl \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_vector_of_bool.inl \
+		../OpenMesh/inc/OpenMesh/Core/IO/StoreRestore.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/IOManager.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/Options.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/BaseReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/importer/BaseImporter.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/BaseKernel.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/PropertyContainer.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/Property.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Handles.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/BaseProperty.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/SingletonT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/SingletonT.cc \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/BaseWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/exporter/BaseExporter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/importer/ImporterT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/vector_cast.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/vector_traits.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/color_cast.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Attributes.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/exporter/ExporterT.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/IOInstances.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/OBJReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/OFFReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/PLYReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/STLReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/OMReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/OMFormat.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/Endian.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/OMFormatT.cc \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/OBJWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/OFFWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/STLWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/OMWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/BinaryHelper.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/PLYWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriConnectivity.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyConnectivity.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/ArrayKernel.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/ArrayItems.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/ArrayKernelT.cc \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/IteratorsT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/CirculatorsT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Traits.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/FinalMeshItemsT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/AttribKernelT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyMeshT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/MathDefs.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyMeshT.cc \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/LoopSchemeMaskT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.cc
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o holefill.o ../starterLight/holefill.cpp
 
 main.o: ../starterLight/main.cpp ../starterLight/mainwindow.h \
@@ -2236,7 +2488,53 @@ mainwindow.o: ../starterLight/mainwindow.cpp ../starterLight/mainwindow.h \
 		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyMeshT.cc \
 		../OpenMesh/inc/OpenMesh/Core/Geometry/LoopSchemeMaskT.hh \
 		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.cc \
-		ui_mainwindow.h
+		../starterLight/holefill.h \
+		ui_mainwindow.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QVariant \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QApplication \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qapplication.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreapplication.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qeventloop.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreapplication_platform.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfuture.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfutureinterface.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmutex.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qelapsedtimer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtsan_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qresultstore.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfuture_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qthreadpool.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qthread.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrunnable.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qexception.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpromise.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qinputmethod.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication_platform.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QGridLayout \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qgridlayout.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayout.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qboxlayout.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QHBoxLayout \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QPushButton \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qpushbutton.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QVBoxLayout \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QWidget \
+		../starterLight/meshviewerwidget.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QDebug \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/QOpenGLWidget \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qopenglwidget.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qtopenglwidgetsglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qtopenglwidgetsexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QSurfaceFormat \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qsurfaceformat.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qopengl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qopenglext.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QMouseEvent \
+		../starterLight/remeshing.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../starterLight/mainwindow.cpp
 
 meshviewerwidget.o: ../starterLight/meshviewerwidget.cpp ../starterLight/meshviewerwidget.h \
@@ -2418,6 +2716,257 @@ meshviewerwidget.o: ../starterLight/meshviewerwidget.cpp ../starterLight/meshvie
 		../OpenMesh/inc/OpenMesh/Core/System/OpenMeshDLLMacros.hh \
 		../OpenMesh/inc/OpenMesh/Core/Geometry/VectorT_inc.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o meshviewerwidget.o ../starterLight/meshviewerwidget.cpp
+
+remeshing.o: ../starterLight/remeshing.cpp ../starterLight/remeshing.h \
+		../starterLight/mainwindow.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QFileDialog \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qfiledialog.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qglobal.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtversionchecks.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtconfiginclude.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qconfig.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtcore-config.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtconfigmacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtcoreexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtdeprecationmarkers.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtpreprocessorsupport.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qassert.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtnoop.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtypes.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtversion.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtclasshelpermacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsysinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlogging.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qflags.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcompare_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qatomic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qconstructormacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdarwinhelpers.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qexceptionhandling.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qforeach.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qttypetraits.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfunctionpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmalloc.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qminmax.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qnumeric.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qoverload.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qswap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtenvironmentvariables.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtresource.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qttranslation.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qversiontagging.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtgui-config.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtguiexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtwidgetsexports.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdir.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstring.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qchar.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearray.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrefcount.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qnamespace.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtmetamacros.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qarraydata.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpair.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qarraydatapointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qarraydataops.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontainertools_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qxptype_traits.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q20functional.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q20memory.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearrayalgorithms.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearrayview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringfwd.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q20type_traits.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringliteral.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlatin1stringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qanystringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qutf8stringview.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringtokenizer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfile.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfiledevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiodevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiodevicebase.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobject.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfunctionaltools_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlist.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiterator.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringlist.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qalgorithms.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreevent.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmetatype.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcompare.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdatastream.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfloat16.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmath.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qiterable.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmetacontainer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontainerinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtaggedpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qscopeguard.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qobject_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qbindingstorage.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfileinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qshareddata.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdatetime.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcalendar.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qlocale.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qvariant.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdebug.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtextstream.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qstringconverter_base.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qshareddata_impl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qset.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qhash.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/q23utility.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtimezone.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qurl.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qdialog.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qwidget.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmargins.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qaction.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qkeysequence.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qicon.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qsize.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpixmap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrect.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpoint.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qcolor.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qrgb.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qrgba64.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qimage.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpixelformat.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qtransform.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpolygon.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qregion.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qline.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpalette.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qbrush.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qfont.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qfontinfo.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qcursor.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qbitmap.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qevent.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpointer.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qeventpoint.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qvector2d.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qvectornd.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qpointingdevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qinputdevice.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qscreen.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QList \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QObject \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QRect \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QSize \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QSizeF \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QTransform \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qnativeinterface.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QMainWindow \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qmainwindow.h \
+		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qtabwidget.h \
+		../OpenMesh/inc/OpenMesh/Core/IO/MeshIO.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/config.h \
+		../OpenMesh/inc/OpenMesh/Core/System/compiler.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/OpenMeshDLLMacros.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_store.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_types.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_rbo.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/omstream.hh \
+		../OpenMesh/inc/OpenMesh/Core/System/mostream.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/GenProg.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_spec.hh \
+		../OpenMesh/inc/OpenMesh/Tools/Utils/NumLimitsT.hh \
+		../OpenMesh/inc/OpenMesh/Tools/Utils/Config.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/VectorT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/Vector11T.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/VectorT_inc.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Status.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_vector_of_fundamentals.inl \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_vector_of_string.inl \
+		../OpenMesh/inc/OpenMesh/Core/IO/SR_binary_vector_of_bool.inl \
+		../OpenMesh/inc/OpenMesh/Core/IO/StoreRestore.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/IOManager.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/Options.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/BaseReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/importer/BaseImporter.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/BaseKernel.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/PropertyContainer.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/Property.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Handles.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/BaseProperty.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/SingletonT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/SingletonT.cc \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/BaseWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/exporter/BaseExporter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/importer/ImporterT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/vector_cast.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/vector_traits.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/color_cast.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Attributes.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/exporter/ExporterT.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/IOInstances.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/OBJReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/OFFReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/PLYReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/STLReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/reader/OMReader.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/OMFormat.hh \
+		../OpenMesh/inc/OpenMesh/Core/Utils/Endian.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/OMFormatT.cc \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/OBJWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/OFFWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/STLWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/OMWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/BinaryHelper.hh \
+		../OpenMesh/inc/OpenMesh/Core/IO/writer/PLYWriter.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriConnectivity.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyConnectivity.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/ArrayKernel.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/ArrayItems.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/ArrayKernelT.cc \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/IteratorsT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/CirculatorsT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/Traits.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/FinalMeshItemsT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/AttribKernelT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyMeshT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/MathDefs.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/PolyMeshT.cc \
+		../OpenMesh/inc/OpenMesh/Core/Geometry/LoopSchemeMaskT.hh \
+		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.cc
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o remeshing.o ../starterLight/remeshing.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

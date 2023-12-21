@@ -46,12 +46,14 @@ SOURCES += \
     holefill.cpp \
         main.cpp \
         mainwindow.cpp \
-    meshviewerwidget.cpp
+    meshviewerwidget.cpp \
+    remeshing.cpp
 
 HEADERS += \
     holefill.h \
         mainwindow.h \
-    meshviewerwidget.h
+    meshviewerwidget.h \
+    remeshing.h
 
 FORMS += \
         mainwindow.ui

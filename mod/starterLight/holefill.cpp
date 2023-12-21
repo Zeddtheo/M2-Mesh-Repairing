@@ -13,19 +13,6 @@ double holeFill::triangleArea(MyMesh* _mesh, const VertexHandle& v1, const Verte
     return 0.5 * (vec1 % vec2).length();
 }
 
-// OpenMesh::Vec3f holeFill::triangleNormal(MyMesh* _mesh, const Triangle& t) {
-//     const auto& p1 = _mesh->point(MyMesh::VertexHandle(t.v1));
-//     const auto& p2 = _mesh->point(MyMesh::VertexHandle(t.v2));
-//     const auto& p3 = _mesh->point(MyMesh::VertexHandle(t.v3));
-
-//     OpenMesh::Vec3f v1 = p2 - p1;
-//     OpenMesh::Vec3f v2 = p3 - p1;
-
-//     OpenMesh::Vec3f normal = v1 % v2;
-//     normal.normalize();
-//     return normal;
-// }
-
 std::tuple<int, int> holeFill::cycle3_origins(MyMesh &mesh, FaceHandle fh, const std::vector<VertexHandle> &boundary_loop) {
     std::vector<int> face_vertex_indices;
     for (auto fv_it = mesh.cfv_begin(fh); fv_it != mesh.cfv_end(fh); ++fv_it) {
@@ -133,3 +120,15 @@ std::vector<FaceHandle> holeFill::fillHole(MyMesh* mesh, const std::vector<Verte
     return new_faces;
 }
 
+// OpenMesh::Vec3f holeFill::triangleNormal(MyMesh* _mesh, const Triangle& t) {
+//     const auto& p1 = _mesh->point(MyMesh::VertexHandle(t.v1));
+//     const auto& p2 = _mesh->point(MyMesh::VertexHandle(t.v2));
+//     const auto& p3 = _mesh->point(MyMesh::VertexHandle(t.v3));
+
+//     OpenMesh::Vec3f v1 = p2 - p1;
+//     OpenMesh::Vec3f v2 = p3 - p1;
+
+//     OpenMesh::Vec3f normal = v1 % v2;
+//     normal.normalize();
+//     return normal;
+// }

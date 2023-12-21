@@ -5,6 +5,7 @@
 #include <stack>
 #include <unordered_set>
 #include <vector>
+#include "remeshing.h"
 //---------------------------------Basic Functions--------------------------------------//
 std::multimap<size_t, std::vector<FaceHandle>> MainWindow::findAllConnectedComponents(MyMesh& mesh) {
     std::multimap<size_t, std::vector<FaceHandle>> components;
@@ -538,7 +539,8 @@ void MainWindow::on_pushButton_Components_clicked(){
 }
 
 void MainWindow::on_pushButton_Holes_clicked(){
-    showHoles(&mesh);
+    markCloseVertices(&mesh);
+    //showHoles(&mesh);
     displayMesh(&mesh);
 }
 
@@ -585,6 +587,12 @@ void MainWindow::on_pushButton_Reset_clicked(){
     displayMesh(&mesh);
 }
 
+void MainWindow::on_pushButton_Remesh_clicked()
+{
+    Remeshing::remesh(&mesh, 0.2);
+    resetAllColorsAndThickness(&mesh);
+    displayMesh(&mesh);
+}
 /* **** fin de la partie boutons et IHM **** */
 
 /* **** fonctions supplémentaires **** */

@@ -78,6 +78,8 @@ public:
     void markCloseVertices(MyMesh* _mesh);
     void mergeCloseVertices(MyMesh* _mesh);
     bool isClose(MyMesh::Point p1, MyMesh::Point p2);
+
+
 private slots:
     void on_pushButton_chargement_clicked();
 
@@ -94,7 +96,7 @@ private slots:
     void on_pushButton_FixAll_clicked();
 
     void on_pushButton_Reset_clicked();
-
+    void on_pushButton_Remesh_clicked();
 
 private:
 
