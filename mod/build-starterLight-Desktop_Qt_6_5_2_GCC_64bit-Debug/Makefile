@@ -2490,50 +2490,6 @@ mainwindow.o: ../starterLight/mainwindow.cpp ../starterLight/mainwindow.h \
 		../OpenMesh/inc/OpenMesh/Core/Mesh/TriMeshT.cc \
 		../starterLight/holefill.h \
 		ui_mainwindow.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QVariant \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QApplication \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qapplication.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreapplication.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qeventloop.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qcoreapplication_platform.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfuture.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfutureinterface.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qmutex.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qdeadlinetimer.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qelapsedtimer.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qtsan_impl.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qresultstore.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qfuture_impl.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qthreadpool.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qthread.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qrunnable.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qexception.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/qpromise.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qinputmethod.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qguiapplication_platform.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QGridLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qgridlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qlayoutitem.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qboxlayout.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QHBoxLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QPushButton \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qpushbutton.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/qabstractbutton.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QVBoxLayout \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtWidgets/QWidget \
-		../starterLight/meshviewerwidget.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtCore/QDebug \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/QOpenGLWidget \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qopenglwidget.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qtopenglwidgetsglobal.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtOpenGLWidgets/qtopenglwidgetsexports.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QSurfaceFormat \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qsurfaceformat.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qopengl.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/qopenglext.h \
-		/home/misc/Qt/6.6.1/gcc_64/include/QtGui/QMouseEvent \
 		../starterLight/remeshing.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../starterLight/mainwindow.cpp
 

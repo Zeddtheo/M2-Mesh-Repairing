@@ -6,10 +6,9 @@ class holeFill
 {
 public:
     holeFill();
-    static double triangleArea(MyMesh* _mesh, const VertexHandle& v1, const VertexHandle& v2, const VertexHandle& v3);
-    //OpenMesh::Vec3f triangleNormal(MyMesh* _mesh, const Triangle& t);
-    std::tuple<int, int> cycle3_origins(MyMesh &mesh, FaceHandle fh, const std::vector<VertexHandle> &boundary_loop);
-    static std::vector<FaceHandle> fillHole(MyMesh* mesh, const std::vector<VertexHandle>& boundary_loop);
+    static void triangularHole(MyMesh* mesh, std::vector<VertexHandle>& holeVertices);
+    double triangleArea(MyMesh* _mesh, const VertexHandle& v1, const VertexHandle& v2, const VertexHandle& v3);
+    static void createTriangle(MyMesh* mesh, MyMesh::Point& p1, MyMesh::Point& p2, MyMesh::Point& p3,  OpenMesh::Vec3uc& color);
 };
 
 #endif // HOLEFILL_H

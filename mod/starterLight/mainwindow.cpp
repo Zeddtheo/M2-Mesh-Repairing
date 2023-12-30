@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "holefill.h"
 #include "ui_mainwindow.h"
+#include <iostream>
 #include <random>
 #include <stack>
 #include <unordered_set>
@@ -397,7 +398,7 @@ std::vector<std::vector<EdgeHandle>> MainWindow::findHoles(MyMesh* mesh) {
     return holes;
 }
 
-std::vector<VertexHandle> MainWindow::boundaryLoop(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh) {
+std::vector<VertexHandle> MainWindow::holeVertices(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh) {
     std::vector<VertexHandle> loopVertices;
     if (edgeHandles.empty() || !mesh) return loopVertices;
 
@@ -413,11 +414,45 @@ std::vector<VertexHandle> MainWindow::boundaryLoop(const std::vector<EdgeHandle>
         loopVertices.push_back(to_vh);
     }
 
-    if (!loopVertices.empty() && loopVertices.front() != loopVertices.back()) {
-        loopVertices.push_back(loopVertices.front());
+    if (!loopVertices.empty() && loopVertices.front() == loopVertices.back()) {
+        loopVertices.pop_back();
     }
 
     return loopVertices;
+}
+
+std::vector<VertexHandle> MainWindow::crackVertices(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh) {
+    std::vector<VertexHandle> crackVertices;
+    if (edgeHandles.empty() || !mesh) return crackVertices;
+
+    for (const auto& eh : edgeHandles) {
+        auto heh = mesh->halfedge_handle(eh, 0);
+
+        VertexHandle from_vh = mesh->from_vertex_handle(heh);
+        VertexHandle to_vh = mesh->to_vertex_handle(heh);
+
+        if (crackVertices.empty() || crackVertices.back() != from_vh) {
+            crackVertices.push_back(from_vh);
+        }
+        crackVertices.push_back(to_vh);
+    }
+
+    return crackVertices;
+}
+
+VertexHandle MainWindow::findClosestVertex(MyMesh* mesh, VertexHandle v, const std::vector<VertexHandle>& vertices) {
+    float minDistance = std::numeric_limits<float>::max();
+    VertexHandle closestVertex;
+
+    for (const auto& candidate : vertices) {
+        float distance = (mesh->point(v) - mesh->point(candidate)).length();
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestVertex = candidate;
+        }
+    }
+
+    return closestVertex;
 }
 //-------------------------------------Show------------------------------------------//
 void MainWindow::showComponents(MyMesh* _mesh){
@@ -438,6 +473,7 @@ void MainWindow::showHoles(MyMesh* _mesh) {
     auto holes = findHoles(_mesh);
     MyMesh::Color holeColor(0,255,0);
     colorBorderLoops(holes, _mesh, holeColor,10);
+
 }
 
 void MainWindow::showNoises(MyMesh* _mesh)
@@ -463,22 +499,46 @@ void MainWindow::showFloaters(MyMesh* mesh) {
 
 //--------------------------------------Fix-------------------------------------------//
 void MainWindow::fixHoles(MyMesh* mesh) {
-    if (!mesh) return;
+    std::vector<std::vector<VertexHandle>> holeVerticesLoop;
 
-    std::vector<std::vector<EdgeHandle>> holes = findHoles(mesh);
-    qDebug("here5");
-    for (const std::vector<EdgeHandle>& hole : holes) {
-        std::vector<VertexHandle> boundary_vertices = boundaryLoop(hole, mesh);
-        std::vector<FaceHandle> new_faces = holeFill::fillHole(mesh, boundary_vertices);
-        for (const FaceHandle& new_face : new_faces) {
-            mesh->set_color(new_face, MyMesh::Color(0, 0, 0));
-        }
-    qDebug("here6");
+    auto holesEdges = findHoles(mesh);
+
+    for (const auto& hole : holesEdges) {
+        auto loopVertices = holeVertices(hole, mesh);
+        holeVerticesLoop.push_back(loopVertices);
+    }
+
+    for (auto& holeVertices : holeVerticesLoop) {
+        holeFill::triangularHole(mesh, holeVertices);
     }
 }
 
-void MainWindow::fixCracks(){
+void MainWindow::fixCracks(MyMesh* mesh) {
+    auto cracks = findCracks(mesh);
 
+    for (const auto& crack : cracks) {
+        // 假设 crack 包含两组边界边
+        auto verticesGroup1 = crackVertices(cracks[0], mesh);
+        auto verticesGroup2 = crackVertices(cracks[1], mesh);
+
+        for (size_t i = 0; i < verticesGroup1.size() - 1; ++i) {
+            VertexHandle v1 = verticesGroup1[i];
+            VertexHandle v2 = verticesGroup1[i + 1];
+
+            // 查找 v1 和 v2 的最近邻点
+            VertexHandle v3 = findClosestVertex(mesh, v1, verticesGroup2);
+            VertexHandle v4 = findClosestVertex(mesh, v2, verticesGroup2);
+
+            MyMesh::Point p1 = mesh->point(v1);
+            MyMesh::Point p2 = mesh->point(v2);
+            MyMesh::Point p3 = mesh->point(v3);
+            MyMesh::Point p4 = mesh->point(v4);
+
+            OpenMesh::Vec3uc color(255, 0, 0);
+            holeFill::createTriangle(mesh, p1, p2, p3, color);
+            holeFill::createTriangle(mesh, p2, p3, p4, color);
+        }
+    }
 }
 
 void MainWindow::fixNoises(MyMesh* mesh){
@@ -539,8 +599,8 @@ void MainWindow::on_pushButton_Components_clicked(){
 }
 
 void MainWindow::on_pushButton_Holes_clicked(){
-    markCloseVertices(&mesh);
-    //showHoles(&mesh);
+    //markCloseVertices(&mesh);
+    showHoles(&mesh);
     displayMesh(&mesh);
 }
 
@@ -565,7 +625,8 @@ void MainWindow::on_pushButton_FixHoles_clicked(){
 }
 
 void MainWindow::on_pushButton_FixCracks_clicked(){
-
+    fixCracks(&mesh);
+    displayMesh(&mesh);
 }
 
 void MainWindow::on_pushButton_FixNoises_clicked(){

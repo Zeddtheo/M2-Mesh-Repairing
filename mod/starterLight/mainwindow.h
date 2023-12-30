@@ -54,13 +54,14 @@ public:
 
     static std::unordered_set<VertexHandle> findMainComponentsVertices(MyMesh* mesh, int nbMainComponents);
     static std::vector<std::vector<EdgeHandle>> findBorders(MyMesh* mesh);
-    static std::vector<std::vector<EdgeHandle>> findCracks(MyMesh* mesh);
-    static std::vector<std::vector<EdgeHandle>> findHoles(MyMesh* mesh);
 
-    std::vector<VertexHandle> boundaryLoop(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh);
+    static std::vector<std::vector<EdgeHandle>> findHoles(MyMesh* mesh);
+    std::vector<VertexHandle> holeVertices(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh);
     void showHoles(MyMesh* _mesh);
 
-    std::vector<std::vector<VertexHandle>> findGaps(MyMesh* _mesh);
+    static std::vector<std::vector<EdgeHandle>> findCracks(MyMesh* mesh);
+    VertexHandle findClosestVertex(MyMesh* mesh, VertexHandle v, const std::vector<VertexHandle>& vertices);
+    std::vector<VertexHandle> crackVertices(const std::vector<EdgeHandle>& edgeHandles, MyMesh* mesh);
     void showCracks(MyMesh* _mesh);
 
     std::vector<std::vector<FaceHandle>> findNoise(MyMesh* mesh);
@@ -70,7 +71,7 @@ public:
     void showFloaters(MyMesh* _mesh);
 
     void fixHoles(MyMesh* mesh);
-    void fixCracks();
+    void fixCracks(MyMesh* mesh);
     void fixNoises(MyMesh* mesh);
     void fixFloaters(MyMesh* mesh);
     void fixAll();
