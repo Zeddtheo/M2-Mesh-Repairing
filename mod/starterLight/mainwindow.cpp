@@ -517,7 +517,6 @@ void MainWindow::fixCracks(MyMesh* mesh) {
     auto cracks = findCracks(mesh);
 
     for (const auto& crack : cracks) {
-        // 假设 crack 包含两组边界边
         auto verticesGroup1 = crackVertices(cracks[0], mesh);
         auto verticesGroup2 = crackVertices(cracks[1], mesh);
 
@@ -525,7 +524,6 @@ void MainWindow::fixCracks(MyMesh* mesh) {
             VertexHandle v1 = verticesGroup1[i];
             VertexHandle v2 = verticesGroup1[i + 1];
 
-            // 查找 v1 和 v2 的最近邻点
             VertexHandle v3 = findClosestVertex(mesh, v1, verticesGroup2);
             VertexHandle v4 = findClosestVertex(mesh, v2, verticesGroup2);
 
@@ -569,8 +567,11 @@ void MainWindow::fixFloaters(MyMesh* mesh) {
     mesh->garbage_collection();
 }
 
-void MainWindow::fixAll(){
-
+void MainWindow::fixAll(MyMesh* mesh){
+    fixNoises(mesh);
+    fixFloaters(mesh);
+    fixCracks(mesh);
+    fixHoles(mesh);
 }
 
 /* **** début de la partie boutons et IHM **** */
@@ -640,10 +641,13 @@ void MainWindow::on_pushButton_FixFloaters_clicked(){
 }
 
 void MainWindow::on_pushButton_FixAll_clicked(){
-
+    fixAll(&mesh);
+    resetAllColorsAndThickness(&mesh);
+    displayMesh(&mesh);
 }
 
 void MainWindow::on_pushButton_Reset_clicked(){
+    mesh.update_normals();
     resetAllColorsAndThickness(&mesh);
     displayMesh(&mesh);
 }

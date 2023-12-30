@@ -74,7 +74,7 @@ public:
     void fixCracks(MyMesh* mesh);
     void fixNoises(MyMesh* mesh);
     void fixFloaters(MyMesh* mesh);
-    void fixAll();
+    void fixAll(MyMesh* mesh);
 
     void markCloseVertices(MyMesh* _mesh);
     void mergeCloseVertices(MyMesh* _mesh);
